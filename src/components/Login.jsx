@@ -74,7 +74,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="bg-green-50 min-h-screen flex items-center justify-center">
+    <div className="bg-green-50 h-screen flex items-center justify-center">
       <Card className="w-full max-w-md">
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
           Log in to Your Account

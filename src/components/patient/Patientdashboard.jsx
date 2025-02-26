@@ -25,8 +25,7 @@ export default function PatientDashboard() {
     { message: "Critical: High blood pressure", color: "failure" },
   ];
   const quickLinks = [
-    { label: "Medical History", href: "/medicalhistory" },
-    { label: "Medications", href: "/medications" },
+    { label: "Medical History", href: "/patientmedicalhistory" },
     { label: "Allergies", href: "/allergies" },
   ];
 
@@ -155,14 +154,7 @@ export default function PatientDashboard() {
               </li>
             ))}
           </ul>
-          <Button
-            color="purple"
-            size="sm"
-            className="mt-4"
-            onClick={() => navigate("/medicalrecords")}
-          >
-            Go to Medical Records
-          </Button>
+          
         </Card>
       </main>
     </div>

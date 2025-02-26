@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -20,6 +20,8 @@ import {
   HiOutlineBeaker,
   HiOutlineLightBulb,
 } from 'react-icons/hi';
+import { ref, onValue, off } from 'firebase/database';
+import { db } from '../lib/firebase';
 
 // Mock data for demonstration
 const initialMedicalHistory = [
@@ -141,15 +143,17 @@ const MedicalHistoryFormModal = ({
 
   // Sync form data when initialData changes (i.e., when editing an entry)
   useEffect(() => {
-    setFormData(initialData || {
-      date: '',
-      type: '',
-      title: '',
-      description: '',
-      notes: '',
-      diagnosis: '',
-      treatment: '',
-    });
+    setFormData(
+      initialData || {
+        date: '',
+        type: '',
+        title: '',
+        description: '',
+        notes: '',
+        diagnosis: '',
+        treatment: '',
+      }
+    );
   }, [initialData]);
 
   const handleInputChange = (e) => {
@@ -157,8 +161,7 @@ const MedicalHistoryFormModal = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleDateChange = (date) =>
-    setFormData((prev) => ({ ...prev, date }));
+  const handleDateChange = (date) => setFormData((prev) => ({ ...prev, date }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -169,7 +172,9 @@ const MedicalHistoryFormModal = ({
   return (
     <Modal show={show} onClose={onClose} size="xl">
       <Modal.Header>
-        {initialData && initialData.id ? 'Edit Medical History Entry' : 'Add New Medical History Entry'}
+        {initialData && initialData.id
+          ? 'Edit Medical History Entry'
+          : 'Add New Medical History Entry'}
       </Modal.Header>
       <Modal.Body>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -290,6 +295,28 @@ export default function MedicalHistoryPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentEntry, setCurrentEntry] = useState(null);
 
+  // Fetch medical history from the Realtime Database
+  useEffect(() => {
+    const dbRef = ref(db, 'medicalHistory');
+    const callback = (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        // Convert object data into an array
+        const events = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setHistory(events);
+      } else {
+        setHistory([]);
+      }
+    };
+    onValue(dbRef, callback);
+
+    // Cleanup listener on unmount
+    return () => off(dbRef, 'value', callback);
+  }, []);
+
   const openModal = (entry = null) => {
     setCurrentEntry(entry);
     setModalOpen(true);
@@ -309,7 +336,7 @@ export default function MedicalHistoryPage() {
         )
       );
     } else {
-      // Create new entry
+      // Create new entry with a unique id (using Date.now() for demo purposes)
       setHistory((prev) => [...prev, { id: Date.now(), ...data }]);
     }
   };
