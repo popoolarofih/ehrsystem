@@ -4,7 +4,7 @@ import { Button, Card, Checkbox, Label, TextInput } from 'flowbite-react';
 import { HiMail, HiLockClosed } from 'react-icons/hi';
 import { auth, db } from '../lib/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { getDoc, doc } from 'firebase/firestore';
+import { get, ref } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
@@ -37,13 +37,12 @@ export default function LoginPage() {
         formData.password
       );
       const user = userCredential.user;
-
-      // Retrieve additional user data from Firestore
-      const userDocRef = doc(db, 'users', user.uid);
-      const userDocSnap = await getDoc(userDocRef);
-
-      if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
+      
+      // Retrieve additional user data from Realtime Database
+      const userRef = ref(db, 'users/' + user.uid);
+      const snapshot = await get(userRef);
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
         console.log('Login success, user data:', userData);
 
         // RBAC: Redirect based on user role
@@ -58,7 +57,7 @@ export default function LoginPage() {
             navigate('/nurse-dashboard');
             break;
           case 'patient':
-            navigate('/patient-dashboard');
+            navigate('/patientdashboard');
             break;
           default:
             navigate('/dashboard');

@@ -13,7 +13,7 @@ import {
 } from 'react-icons/hi';
 import { auth, db } from '../lib/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { setDoc, doc } from 'firebase/firestore';
+import { ref, set } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
 
 export default function SignUpPage() {
@@ -28,8 +28,8 @@ export default function SignUpPage() {
     phone: '',
     agreeToTerms: false,
   });
-
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   // States to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
@@ -46,10 +46,11 @@ export default function SignUpPage() {
     }));
   };
 
-  // Submit the form: create user in Firebase Auth and store extra data in Firestore
+  // Submit the form: create user in Firebase Auth and store extra data in Realtime Database
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     // Basic validations
     if (formData.password !== formData.confirmPassword) {
@@ -83,12 +84,15 @@ export default function SignUpPage() {
         createdAt: new Date().toISOString(),
       };
 
-      // Store the user data in Firestore with the UID as the document ID
-      await setDoc(doc(db, 'users', user.uid), userData);
+      // Store the user data in Realtime Database under "users/{uid}"
+      await set(ref(db, 'users/' + user.uid), userData);
 
       console.log('User signed up and data stored:', userData);
-      // Redirect to login page after successful signup
-      navigate('/login');
+      setSuccess('Account created successfully! Redirecting to login...');
+      // Redirect to login page after 2 seconds
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (err) {
       console.error('Error during sign up:', err);
       setError(err.message);
@@ -107,6 +111,11 @@ export default function SignUpPage() {
         {error && (
           <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">
             {error}
+          </div>
+        )}
+        {success && (
+          <div className="bg-green-100 text-green-700 p-2 mb-4 rounded">
+            {success}
           </div>
         )}
 

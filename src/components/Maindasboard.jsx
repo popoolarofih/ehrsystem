@@ -33,7 +33,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { auth, db } from '../lib/firebase';
-import { getDoc, doc } from 'firebase/firestore';
+import { get, ref } from 'firebase/database';
 
 // Register ChartJS components
 ChartJS.register(
@@ -50,16 +50,16 @@ export default function MainDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [doctorInfo, setDoctorInfo] = useState(null);
 
-  // Fetch the logged in doctor's info from Firestore
+  // Fetch the logged in doctor's info from Realtime Database
   useEffect(() => {
     const fetchDoctorInfo = async () => {
       const user = auth.currentUser;
       if (user) {
         try {
-          const docRef = doc(db, 'users', user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setDoctorInfo(docSnap.data());
+          const doctorRef = ref(db, 'users/' + user.uid);
+          const snapshot = await get(doctorRef);
+          if (snapshot.exists()) {
+            setDoctorInfo(snapshot.val());
           } else {
             console.log("No doctor info found.");
           }
