@@ -19,7 +19,7 @@ export default function CreateAppointmentPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
@@ -32,18 +32,24 @@ export default function CreateAppointmentPage() {
     setLoading(true);
 
     try {
+      // Get current user's uid to use as the patientId.
       const patientId = auth.currentUser ? auth.currentUser.uid : null;
+      if (!patientId) {
+        throw new Error("User is not authenticated.");
+      }
+      
       const appointmentData = {
         ...formData,
-        patientId,
+        patientId, // This field must equal auth.uid for patients per the rules.
         createdAt: new Date().toISOString(),
       };
 
-      // Push a new appointment into the "appointments" node in the Realtime Database
+      // Push the new appointment into the "appointments" node.
       await push(ref(db, 'appointments'), appointmentData);
+      
       setSuccess('Appointment created successfully! Redirecting...');
       setTimeout(() => {
-        navigate('/appointments');
+        navigate('/patientdashboard');
       }, 2000);
     } catch (err) {
       console.error('Error creating appointment:', err);
