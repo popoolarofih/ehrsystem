@@ -342,7 +342,7 @@ export default function MedicalHistoryPage() {
   };
 
   return (
-    <div className="container mx-auto p-4 bg-gray-50 min-h-screen">
+    <div className="container mx-auto p-4 bg-gray-50 h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">
           Medical History

@@ -7,17 +7,11 @@ import {
   Avatar,
   Button,
   Badge,
-  Table,
 } from 'flowbite-react';
 import {
   HiChartPie,
   HiUsers,
-  HiUser,
   HiClipboardList,
-  HiExclamationCircle,
-  HiOutlineClipboardList,
-  HiBeaker,
-  HiLightBulb,
   HiBell,
   HiBookOpen,
 } from 'react-icons/hi';
@@ -31,6 +25,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import logo from '../Images/ehr-logo.png'
 import { Line } from 'react-chartjs-2';
 import { auth, db } from '../lib/firebase';
 import { get, ref } from 'firebase/database';
@@ -75,7 +70,7 @@ export default function MainDashboard() {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <Sidebar className="w-64">
-        <Sidebar.Logo href="#" img="/ehr-logo.png" imgAlt="EHR logo">
+        <Sidebar.Logo>
           EHR System
         </Sidebar.Logo>
         <Sidebar.Items>
@@ -97,7 +92,7 @@ export default function MainDashboard() {
               My Patients
             </Sidebar.Item>
             <Sidebar.Item
-              href="/appointments"
+              href="/allappointments"
               icon={HiBookOpen}
               active={activeTab === 'appointments'}
               onClick={() => setActiveTab('appointments')}
@@ -129,7 +124,7 @@ export default function MainDashboard() {
         {/* Navbar */}
         <Navbar fluid rounded>
           <Navbar.Brand href="#">
-            <img src="/ehr-logo.png" className="mr-3 h-6 sm:h-9" alt="EHR Logo" />
+           <img src={logo} className="mr-3 h-20 sm:h-20" alt="EHR Logo" />
             <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
               EHR System
             </span>

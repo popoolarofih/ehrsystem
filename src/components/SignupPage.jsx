@@ -101,7 +101,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="bg-green-100 min-h-screen flex items-center justify-center p-4">
+    <div className="bg-green-100 h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-2xl shadow-lg">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Join Our EHR System</h2>

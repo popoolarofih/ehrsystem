@@ -7,7 +7,7 @@ import dashboard from '../Images/dashboard.png'
 
 export default function LandingPage() {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white h-screen">
       <header className="bg-green-50 py-4 sticky top-0 z-10">
         <div className="container mx-auto px-4">
           <nav className="flex justify-between items-center">

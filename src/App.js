@@ -18,6 +18,7 @@ import MedicalHistory from './components/patient/MedicalHistory';
 import PatientLabResultsPage from './components/patient/Patientlabresult';
 import AppointmentPage from './components/Appointment';
 import CreateAppointmentPage from './components/patient/CreateAppoinment';
+import AllApointments from './components/Viewallappointment';
 function App() {
   return (
     <Router>
@@ -40,6 +41,7 @@ function App() {
         <Route path="/patientlabresultspage" element={<PatientLabResultsPage />} />
         <Route path="/appointment" element={<AppointmentPage />} />
         <Route path="/create-appointment" element={<CreateAppointmentPage />} />
+        <Route path="/allappointments" element={<AllApointments />} />
       </Routes>
     </Router>
   );
